@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>凡人修仙 • 影像录</title>
+    <style>
+        /* --- 基础设置 --- */
+        :root {
+            --paper-bg: #fdfbf7;
+            --ink-color: #2b2b2b;
+            --accent-red: #8f1e1e; /* 朱砂红 */
+            --accent-gold: #bfa376;
+            --border-color: #5d4037;
+            --secondary-text: #595959;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "STSong", serif; /* 优先使用衬线体/宋体 */
+            background-color: #e6e2d3;
+            /* 叠加一个纹理效果 */
+            background-image:
+                linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            color: var(--ink-color);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* --- 主容器：模拟古籍/卷轴 --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--paper-bg);
+            border: 1px solid #d4cbb8;
+            /* 双重边框模拟装裱 */
+            box-shadow:
+                0 0 0 8px var(--paper-bg),
+                0 0 0 9px var(--border-color),
+                0 20px 50px rgba(0,0,0,0.15);
+            padding: 40px;
+            position: relative;
+        }
+
+        /* 装饰用的角落花纹 */
+        .container::before, .container::after {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--accent-red);
+            transition: all 0.5s ease;
+        }
+        .container::before { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .container::after { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        /* --- 头部区域 --- */
+        header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--ink-color);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: normal;
+            letter-spacing: 10px;
+            color: var(--ink-color);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            font-family: "KaiTi", "STKaiti", serif; /* 标题用楷体 */
+        }
+
+        /* 模拟印章 */
+        .seal-mark {
+            display: inline-block;
+            background-color: var(--accent-red);
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            writing-mode: vertical-lr; /* 竖排文字 */
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            right: 20px;
+            box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+            font-family: "SimSun", serif;
+            letter-spacing: 2px;
+        }
+
+        /* 站点链接按钮 */
+        .site-link-wrapper {
+            text-align: center;
+            margin: -20px auto 30px;
+        }
+
+        .site-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            padding: 8px 24px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            background: transparent;
+        }
+
+        .site-link:hover {
+            background-color: var(--accent-red);
+            color: white;
+        }
+
+        /* --- 分组标题 --- */
+        h1.section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 50px 0 30px;
+            color: var(--ink-color);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 标题两侧的线条装饰 */
+        h1.section-title::before,
+        h1.section-title::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: var(--ink-color);
+            margin: 0 20px;
+        }
+
+        /* --- 图片网格 --- */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .image-wrapper {
+            position: relative;
+            background: #fff;
+            padding: 8px 8px 30px 8px; /* 底部留白模拟拍立得或题词处 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            border: 1px solid #eee;
+        }
+
+        .image-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: var(--accent-gold);
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            filter: sepia(0.2); /* 微微的泛黄怀旧感 */
+            transition: filter 0.3s;
+        }
+
+        .image-wrapper:hover img {
+            filter: sepia(0) contrast(1.1); /* 悬停时恢复原色并增加对比度 */
+        }
+
+        /* 图片下方的文字（文件名）- 可选，这里用伪元素简单模拟落款 */
+        .image-wrapper::after {
+            content: "· 凡人 ·";
+            position: absolute;
+            bottom: 6px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            font-family: "SimSun", serif;
+        }
+
+        /* --- 视频区域：模拟竹简/列表 --- */
+        .videos {
+            background-color: rgba(240, 238, 225, 0.5);
+            border: 1px solid #dcdcdc;
+            padding: 30px;
+            margin-top: 60px;
+            border-radius: 4px;
+        }
+
+        .videos h3 {
+            font-size: 1.4rem;
+            color: var(--accent-red);
+            border-bottom: 1px solid var(--accent-red);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-family: "KaiTi", serif;
+        }
+
+        .video-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed #bbb;
+            font-size: 1.1rem;
+        }
+
+        .video-item span {
+            color: var(--ink-color);
+        }
+
+        .video-item a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid #bbb;
+            padding: 4px 12px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .video-item a:hover {
+            color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        /* --- 模态框 --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* 深色背景 */
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90vh;
+            border: 8px solid #fff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s ease;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 50px;
+            font-weight: 100;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-family: sans-serif; /* 关闭按钮保持简洁 */
+        }
+
+        .close:hover {
+            color: var(--accent-red);
+            transform: rotate(90deg);
+        }
+
+        /* 动画关键帧 */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoomIn { from { transform: translate(-50%, -50%) scale(0.9); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+
+        /* --- 响应式 --- */
+        @media (max-width: 768px) {
+            .container { padding: 20px; box-shadow: none; border-width: 0; }
+            header h1 { font-size: 2rem; }
+            .image-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .image-wrapper img { height: 180px; }
+            .video-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>凡人影像录</h1>
+        <div class="seal-mark">珍藏</div>
+    </header>
+
+    <div class="site-link-wrapper">
+        <a class="site-link" href="http://218.244.143.80/" target="_blank" rel="noopener">
+            前往主站 &rarr;
+        </a>
+    </div>
+
+    <!-- 男团区域 -->
+    <h1 class="section-title">道友 • 男团</h1>
+    <div class="image-container" id="maleContainer">
+        <!-- JS将自动填充图片 -->
+    </div>
+
+    <!-- 女团区域 -->
+    <h1 class="section-title">红颜 • 女团</h1>
+    <div class="image-container" id="femaleContainer">
+        <!-- JS将自动填充图片 -->
+    </div>
+
+    <!-- 视频区域 -->
+    <div class="videos">
+        <h3>影音阁</h3>
+        <div class="video-item">
+            <span>[乱星海] 男团 VS 女团</span>
+            <a href="https://www.bilibili.com/video/BV1WRF8emEaF/" target="_blank">点击观赏</a>
+        </div>
+        <div class="video-item">
+            <span>[人物志] 玄骨上人</span>
+            <a href="https://www.bilibili.com/video/BV1iFHQenE3v/?spm_id_from=333.337.search-card.all.click&vd_source=d7c4be7a276cad071b165702360192fa" target="_blank">点击观赏</a>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框：用于图片放大预览 -->
+<div id="imageModal" class="modal" aria-hidden="true">
+    <span class="close" role="button" aria-label="关闭">&times;</span>
+    <img class="modal-content" id="modalImage" alt="大图预览">
+</div>
+
+<!-- 原始逻辑脚本，未做改动，确保图片加载功能正常 -->
+<script>
+    (function() {
+        // 分组名称
+        const groups = ['男团', '女团'];
+
+        // 工具：去重并按文件名中的第一个数字升序排序
+        function sortFilesNumerically(files) {
+            const seen = new Set();
+            return files
+                .map(f => String(f).trim())
+                .filter(f => f && !seen.has(f) && seen.add(f))
+                .sort((a, b) => {
+                    const ra = a.match(/(\d+)/);
+                    const rb = b.match(/(\d+)/);
+                    const na = ra ? Number(ra[1]) : NaN;
+                    const nb = rb ? Number(rb[1]) : NaN;
+                    if (isNaN(na) && isNaN(nb)) return a.localeCompare(b, undefined, { numeric: true });
+                    if (isNaN(na)) return 1;
+                    if (isNaN(nb)) return -1;
+                    return na - nb;
+                });
+        }
+
+        // 页面装载
+        document.addEventListener('DOMContentLoaded', function() {
+            Promise.all(groups.map(folder => discoverAndRenderGroup(folder))).then(() => {
+                initModal();
+            });
+        });
+
+        // 发现并渲染
+        async function discoverAndRenderGroup(folderName) {
+            const containerId = folderName === '男团' ? 'maleContainer' : 'femaleContainer';
+            const files = await discoverImagesInFolder(folderName);
+            const sorted = sortFilesNumerically(files);
+            renderGroupImages(folderName, containerId, sorted);
+        }
+
+        // 尝试发现文件夹内图片
+        async function discoverImagesInFolder(folder) {
+            const basePath = `image/${encodeURIComponent(folder)}`;
+            // 1) 尝试读取 index.json
+            try {
+                const res = await fetch(`${basePath}/index.json`);
+                if (res.ok) {
+                    const list = await res.json();
+                    if (Array.isArray(list)) return list.map(String);
+                }
+            } catch (e) {}
+
+            // 2) 按数字序列尝试文件名
+            const maxIndex = 100;
+            const extCandidates = ['.jpg', '.jpeg', '.png', '.webp'];
+            const baseNamePattern = '凡人 (%d)';
+            const found = [];
+            const concurrency = 8;
+            const tasks = [];
+            for (let i = 1; i <= maxIndex; i++) {
+                const n = i;
+                tasks.push(async () => {
+                    for (const ext of extCandidates) {
+                        const filename = `${baseNamePattern.replace('%d', n)}${ext}`;
+                        const path = `${basePath}/${encodeURIComponent(filename)}`;
+                        const exists = await checkImageExists(path);
+                        if (exists) {
+                            found.push(filename);
+                            return;
+                        }
+                    }
+                });
+            }
+
+            async function runBatches(tasks, limit) {
+                const results = [];
+                let idx = 0;
+                async function worker() {
+                    while (idx < tasks.length) {
+                        const cur = idx++;
+                        try { results.push(await tasks[cur]()); } catch (e) { }
+                    }
+                }
+                const workers = [];
+                for (let i = 0; i < limit; i++) workers.push(worker());
+                await Promise.all(workers);
+                return results;
+            }
+
+            await runBatches(tasks, concurrency);
+            return found;
+        }
+
+        function checkImageExists(src) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = src;
+            });
+        }
+
+        function renderGroupImages(folderName, containerId, files) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const frag = document.createDocumentFragment();
+            files.forEach(name => frag.appendChild(createImageWrapper(folderName, name)));
+            container.appendChild(frag);
+        }
+
+        function createImageWrapper(folder, name) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-wrapper';
+
+            const img = document.createElement('img');
+            img.src = `image/${encodeURIComponent(folder)}/${encodeURIComponent(name)}`;
+            img.alt = name.replace(/\.jpg$/i, '');
+            img.loading = 'lazy';
+
+            wrapper.appendChild(img);
+            return wrapper;
+        }
+
+        function initModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const closeBtn = document.querySelector('.close');
+
+            document.querySelectorAll('.image-container').forEach(function(container) {
+                container.addEventListener('click', function(e) {
+                    const target = e.target;
+                    if (target && target.tagName === 'IMG') {
+                        e.stopPropagation();
+                        modal.style.display = 'block';
+                        modal.setAttribute('aria-hidden', 'false');
+                        modalImg.src = target.src;
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            closeBtn && closeBtn.addEventListener('click', closeModal);
+            modal && modal.addEventListener('click', function(event) {
+                if (event.target === modal) closeModal();
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modal && modal.style.display === 'block') closeModal();
+            });
+
+            function closeModal() {
+                if (!modal) return;
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = 'auto';
+                if (modalImg) modalImg.src = '';
+            }
+        }
+    })();
+</script>
+</body>
+</html>
